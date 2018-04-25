@@ -134,9 +134,9 @@ function (qlik) {
 							}
 							xhr2.send();
 
-    					} catch (err) {
-        					alert('Error: ' + resp);
-    					}
+						} catch (err) {
+							alert('Error: ' + resp);
+						}
 					}
 					xhr1.send();			
 				}
