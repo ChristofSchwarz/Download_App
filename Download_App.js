@@ -103,34 +103,40 @@ function (qlik) {
 					xhr1.onload = function(reply1) {
 
 						var resp = reply1.target.response;	
-						var ticket = (JSON.parse(resp)).value;
-						// console.log ('Ticket for download: ' + ticket);					
-						var endpoint2 = vproxy + 'qrs/download/app/' + app.id + '/' + ticket + '/' + encodeURIComponent(title);
-						console.log('QRS Endpoint2: ' + endpoint2);
-						var xhr2 = new XMLHttpRequest();
-						xhr2.open('GET', endpoint2 +   '?xrfkey=4b8d3f8h1j5lmn02', true);
-						xhr2.setRequestHeader('x-Qlik-Xrfkey', '4b8d3f8h1j5lmn02');
-						xhr2.setRequestHeader('Content-type', 'application/octet-stream');
-						xhr2.responseType = 'blob';
-						xhr2.onload = function() {
-							var blob = new Blob([this.response], {type: 'application/octet-stream'});
-												
-							if (window.navigator && window.navigator.msSaveBlob) { // for IE
-								console.log('IE download of ' + title);
-								window.navigator.msSaveBlob(blob, encodeURIComponent(title));		
-							} else { // for Non-IE (chrome, firefox etc.)
-								console.log('Non-IE download of ' + title);						
+						var ticket;
+						try {
+        					ticket = (JSON.parse(resp)).value;
+							// console.log ('Ticket for download: ' + ticket);					
+							var endpoint2 = vproxy + 'qrs/download/app/' + app.id + '/' + ticket + '/' + encodeURIComponent(title);
+							console.log('QRS Endpoint2: ' + endpoint2);
+							var xhr2 = new XMLHttpRequest();
+							xhr2.open('GET', endpoint2 +   '?xrfkey=4b8d3f8h1j5lmn02', true);
+							xhr2.setRequestHeader('x-Qlik-Xrfkey', '4b8d3f8h1j5lmn02');
+							xhr2.setRequestHeader('Content-type', 'application/octet-stream');
+							xhr2.responseType = 'blob';
+							xhr2.onload = function() {
 								var blob = new Blob([this.response], {type: 'application/octet-stream'});
-								var downloadUrl = window.URL.createObjectURL(blob);
-								var a = document.createElement('a');
-								a.href = downloadUrl;
-								a.download = title;
-								$element.append(a);  // temporarily create an a-tag, click it, remove it
-								a.click();
-								a.remove();
+
+								if (window.navigator && window.navigator.msSaveBlob) { // for IE
+									console.log('IE download of ' + title);
+									window.navigator.msSaveBlob(blob, encodeURIComponent(title));		
+								} else { // for Non-IE (chrome, firefox etc.)
+									console.log('Non-IE download of ' + title);						
+									var blob = new Blob([this.response], {type: 'application/octet-stream'});
+									var downloadUrl = window.URL.createObjectURL(blob);
+									var a = document.createElement('a');
+									a.href = downloadUrl;
+									a.download = title;
+									$element.append(a);  // temporarily create an a-tag, click it, remove it
+									a.click();
+									a.remove();
+								}
 							}
-						}
-						xhr2.send();
+							xhr2.send();
+
+    					} catch (err) {
+        					alert('Error: ' + resp);
+    					}
 					}
 					xhr1.send();			
 				}
