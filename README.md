@@ -2,6 +2,8 @@
 
 This is a simple download button, that uses the QRS API in the back to export and download the current app.
 
+<img src="https://github.com/ChristofSchwarz/Download_App/raw/master/downloadapp.gif" width="550"/>
+
 * Only works for Qlik Sense Server
 * Also works on published apps
 * tested with Default Virtual Proxy and custom proxy
